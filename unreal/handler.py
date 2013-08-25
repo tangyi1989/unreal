@@ -20,6 +20,7 @@ class ProxyHandler(web.RequestHandler):
 
         cache_key = cache.CacheKey(
             "REQUEST", self.request.host, self.request.method, self.request.uri)
+
         if not without_cache:
             result = cache.get(cache_key)
             if result is not None:
@@ -52,16 +53,21 @@ class ProxyHandler(web.RequestHandler):
         return result
 
     def proxy(self):
-        status, headers, body = self.proxy_request()
 
-        expect_headers = ["set-cookie", "content-encoding"]
+        status, headers, body = self.proxy_request()
+        expect_headers = ['set-cookie', 'content-encoding']
+        
         for key, value in headers:
             if key.lower() in expect_headers:
                 self.set_header(key, value)
 
+            if key.lower() == 'content-type':
+                self.set_header('Content-Type', value)
+
         self.set_status(status)
         if status in [200]:
-            self.finish(body)
+            self.write(body)
+            self.finish()
 
     def get(self):
         return self.proxy()
@@ -75,25 +81,25 @@ class RootProxy(ProxyHandler):
 
         cached_response = cache.get(cache_key)
         if cached_response is not None:
-            status, body = cached_response
-            self.set_status(status)
-            return self.finish(body)
+            status, headers, modified_body = cached_response
+        else:
+            status, headers, body = self.proxy_request(ungzip=True)
+            html_headers = [
+                '<script type="text/javascript" src="/static/javascript/unreal_jquery.js"></script>',
+                '<script type="text/javascript" src="/static/javascript/unreal_ad.js"></script>']
 
-        status, headers, body = self.proxy_request(ungzip=True)
+            body = utils.convert_encoding(body)
+            modified_body = utils.add_html_header(body, html_headers)
+            cache_response = (status, headers, modified_body)
+            cache.set(cache_key, cache_response, CONF.backend_expire_seconds)
+        
 
         expect_headers = ["set-cookie"]
         for key, value in headers:
             if key.lower() in expect_headers:
                 self.set_header(key, value)
 
-        html_headers = [
-            '<script type="text/javascript" src="/static/javascript/unreal_jquery.js"></script>',
-            '<script type="text/javascript" src="/static/javascript/unreal_ad.js"></script>']
-        body = utils.convert_encoding(body)
-        modified_body = utils.add_html_header(body, html_headers)
-
         self.set_status(status)
         if status in [200]:
-            cache_response = (status, modified_body)
-            cache.set(cache_key, cache_response, CONF.backend_expire_seconds)
-            self.finish(modified_body)
+            self.write(modified_body)
+            self.finish()

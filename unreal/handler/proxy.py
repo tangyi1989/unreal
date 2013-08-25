@@ -4,18 +4,17 @@
 import gzip
 import cStringIO
 
-from tornado import web
-
 from unreal import http
 from unreal import utils
 from unreal import config
 from unreal import cache
 from unreal import exception
+from unreal.handler import base
 
 CONF = config.CONF
 
 
-class ProxyHandler(web.RequestHandler):
+class ProxyHandler(base.BaseHandler):
 
     def prevent_loop_request_self(self):
         # To prevent loop request self

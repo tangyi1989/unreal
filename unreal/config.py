@@ -8,6 +8,7 @@ config = [
     ("cache_redis_db", 0),
     ("backend_expire_seconds", 300),
     ("http_listen_port", 80),
+    ("main_site_host", "127.0.0.1"),
 ]
 
 

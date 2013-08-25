@@ -11,7 +11,7 @@ String.prototype.format = function() {
 
 /* Advertisments framework */
 
-var advertisments = [["郑洁快看", "http://baidu.com", "2013/12/24", "双线不卡", "畅通无阻", "12345678", "服务器IP"],];
+var advertisments = [["郑洁快看", "http://baidu.com", "2013/12/24", "双线不卡", "畅通无阻", "12345678", "服务器IP"]];
 
 var load_9pk_ads = function(){
     // args for AD_tempalte {0:name, 1:ad_url, 2:open_date, 3:link, 4:comment, 5:kf_qq, 6:server_ip}

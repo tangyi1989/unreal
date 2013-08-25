@@ -4,11 +4,13 @@
 import os
 
 from unreal import handler
+from unreal import config
 from unreal import greentornado
 
 from tornado import web
 from tornado import httpserver
 
+CONF = config.CONF
 
 class Application(web.Application):
 
@@ -18,6 +20,7 @@ class Application(web.Application):
 
         g_handlers = self.greenify_handlers(handlers)
 
+        # TODO : Should prevent loop visit self.
         application_settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "template"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -36,5 +39,5 @@ class Application(web.Application):
 
 def start():
     http_server = httpserver.HTTPServer(Application(), xheaders=True)
-    http_server.listen(80)
+    http_server.listen(CONF.http_listen_port)
     greentornado.Hub.start()

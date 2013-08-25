@@ -1,3 +1,5 @@
+#*_* coding=utf8 *_*
+#!/usr/bin/env python
 
 import sys
 import time

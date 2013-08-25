@@ -31,17 +31,17 @@ var load_9pk_ads = function(){
         var ad_string = AD_template.format(ad_args[0], ad_args[1], ad_args[2], ad_args[3], ad_args[4], ad_args[5], ad_args[6]);
         $top_table.find("tr:eq(1)").before(ad_string);
     }
-}
+};
 
 var load_handlers = {"9pk.118sh.com" : load_9pk_ads};
 
-function load_ads(){
+var load_ads = function(){
     var host = window.location.host;
     var handler = load_handlers[host];
     if(handler !== undefined){
         handler();
     }
-}
+};
 
 $(document).ready(function(){
     load_ads();

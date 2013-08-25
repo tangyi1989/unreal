@@ -15,16 +15,15 @@ CONF = config.CONF
 class Application(web.Application):
 
     def __init__(self):
-        handlers = [(r"/", handler.RootProxy),
-                    (r".*", handler.ProxyHandler)]
+        handlers = [(r"/", handler.proxy.RootProxy),
+                    (r".*", handler.proxy.ProxyHandler)]
 
         g_handlers = self.greenify_handlers(handlers)
 
-        # TODO : Should prevent loop visit self.
         application_settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "template"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
-            debug=True)
+            debug=CONF.debug)
 
         web.Application.__init__(self, g_handlers, **application_settings)
 

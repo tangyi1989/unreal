@@ -3,10 +3,11 @@
 
 config = [
     ("cache_redis_host", "127.0.0.1"),
+    ("debug", True),
     ("cache_redis_port", 6379),
     ("cache_redis_db", 0),
     ("backend_expire_seconds", 300),
-    ("http_listen_port", 5188),
+    ("http_listen_port", 80),
 ]
 
 

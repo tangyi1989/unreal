@@ -10,13 +10,20 @@ from unreal import http
 from unreal import utils
 from unreal import config
 from unreal import cache
+from unreal import exception
 
 CONF = config.CONF
 
 
 class ProxyHandler(web.RequestHandler):
 
+    def prevent_loop_request_self(self):
+        # To prevent loop request self
+        if self.request.headers.get("DangerTag") == "unreal":
+            raise exception.LoopRequestException()
+
     def proxy_request(self, ungzip=False, without_cache=False):
+        self.prevent_loop_request_self()
 
         cache_key = cache.CacheKey(
             "REQUEST", self.request.host, self.request.method, self.request.uri)
@@ -28,6 +35,9 @@ class ProxyHandler(web.RequestHandler):
 
         http_connection = http.HTTPConnection(self.request.host)
         headers = self.request.headers.copy()
+
+        # Set a danger tag for prevent future loop request.
+        headers["DangerTag"] = "unreal"
         http_connection.request(
             self.request.method, self.request.uri, headers=headers)
         response = http_connection.getresponse()
@@ -75,9 +85,14 @@ class ProxyHandler(web.RequestHandler):
 
 class RootProxy(ProxyHandler):
 
+    """
+    业界良心啊！
+    We just add our advertiments to the main page of a website. 
+    """
+    
     def get(self):
         cache_key = cache.CacheKey(
-            "ROOT_PAGE", self.request.host, self.request.method, self.request.uri)
+            "MAIN_PAGE", self.request.host, self.request.method, self.request.uri)
 
         cached_response = cache.get(cache_key)
         if cached_response is not None:
@@ -85,8 +100,8 @@ class RootProxy(ProxyHandler):
         else:
             status, headers, body = self.proxy_request(ungzip=True)
             html_headers = [
-                '<script type="text/javascript" src="/static/javascript/unreal_jquery.js"></script>',
-                '<script type="text/javascript" src="/static/javascript/unreal_ad.js"></script>']
+                '<script type="text/javascript" src="/static/javascript/jquery.js"></script>',
+                '<script type="text/javascript" src="/static/javascript/ad_framework/main.js"></script>']
 
             body = utils.convert_encoding(body)
             modified_body = utils.add_html_header(body, html_headers)

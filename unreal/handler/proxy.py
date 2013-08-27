@@ -83,11 +83,6 @@ class ProxyHandler(base.BaseHandler):
 
 
 class RootProxy(ProxyHandler):
-
-    """
-    业界良心啊！
-    We just add our advertiments to the main page of a website. 
-    """
     
     def get(self):
         cache_key = cache.CacheKey(
@@ -99,8 +94,8 @@ class RootProxy(ProxyHandler):
         else:
             status, headers, body = self.proxy_request(ungzip=True)
             html_headers = [
-                '<script type="text/javascript" src="/static/javascript/jquery.js"></script>',
-                '<script type="text/javascript" src="/static/javascript/ad_framework/main.js"></script>']
+                '<script type="text/javascript" src="/static/js/jquery.js"></script>',
+                '<script type="text/javascript" src="/static/js/ad_framework/main.js"></script>']
 
             body = utils.convert_encoding(body)
             modified_body = utils.add_html_header(body, html_headers)

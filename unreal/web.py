@@ -41,13 +41,15 @@ def create_application():
                       (r".*", handler.proxy.ProxyHandler)]
     proxy_handlers = greenify_handlers(proxy_handlers)
 
-    main_handlers = [(r"/", handler.main.Index)]
+    main_handlers = [(r"/", handler.main.Index),
+                     (r"/link/(w+)", handler.main.Link)]
     main_handlers = greenify_handlers(main_handlers)
 
     # Create our application that handle multiple host.
     application = Application()
     application.add_handlers(CONF.main_site_host, main_handlers)
-    application.add_handlers(".*", proxy_handlers)
+    # match all host except main site.
+    application.add_handlers("(?!%s)" % CONF.main_site_host, proxy_handlers)
 
     return application
 

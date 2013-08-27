@@ -41,8 +41,8 @@ class RedisClient(object):
     def get_connection(cls):
         pool = cls.pool()
         return redis.Redis(
-            host=CONF.cache_redis_host, port=CONF.cache_redis_port,
-            db=CONF.cache_redis_db, connection_pool=pool)
+            host=CONF.redis_host, port=CONF.redis_port,
+            db=CONF.redis_cache_db, connection_pool=pool)
 
 
 def set(cache_key, obj, expire_seconds=None):

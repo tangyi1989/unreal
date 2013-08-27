@@ -2,15 +2,16 @@
 #!/usr/bin/env python
 
 import os
+import redis
+
+import tornado
+from tornado import web
+from tornado import httpserver
 
 from unreal import config
 from unreal import handler
 from unreal import greentornado
-
-import tornado
-from tornado import web
-
-from tornado import httpserver
+from unreal.session import RedisSessionStore
 
 CONF = config.CONF
 
@@ -18,6 +19,10 @@ CONF = config.CONF
 class Application(web.Application):
 
     def __init__(self):
+        redis_connection = redis.Redis(
+            host=CONF.redis_host, port=CONF.redis_port, db=CONF.redis_session_db)
+        self.session_store = RedisSessionStore(redis_connection)
+
         application_settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "template"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),

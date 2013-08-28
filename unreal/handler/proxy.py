@@ -4,11 +4,11 @@
 import gzip
 import cStringIO
 
-from unreal import http
-from unreal import utils
 from unreal import config
-from unreal import cache
 from unreal import exception
+from unreal.utils import cache
+from unreal.utils import html
+from unreal.utils import http
 from unreal.handler import base
 
 CONF = config.CONF
@@ -97,8 +97,8 @@ class RootProxy(ProxyHandler):
                 '<script type="text/javascript" src="/static/js/jquery.js"></script>',
                 '<script type="text/javascript" src="/static/js/ad_framework/main.js"></script>']
 
-            body = utils.convert_encoding(body)
-            modified_body = utils.add_html_header(body, html_headers)
+            body = html.convert_encoding(body)
+            modified_body = html.add_html_header(body, html_headers)
             cache_response = (status, headers, modified_body)
             cache.set(cache_key, cache_response, CONF.backend_expire_seconds)
         

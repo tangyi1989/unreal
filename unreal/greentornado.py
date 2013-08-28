@@ -116,6 +116,14 @@ class TornadoHub(object):
     def remove(self, fd):
         self.io_loop.remove_handler(fd)
 
+    def add_timer(self, timer):
+        scheduled_time = self.io_loop.add_timeout(
+            time.time() + timer.seconds, timer)
+        return scheduled_time
+
+    def timer_canceled(self, timer):
+        self.io_loop.remove_timeout(timer.scheduled_time)
+
     def schedule_call_local(self, seconds, func, *args, **kwargs):
         def call_if_greenlet_alive(*args1, **kwargs1):
             if t.greenlet.dead:

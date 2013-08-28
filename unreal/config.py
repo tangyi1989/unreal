@@ -10,7 +10,12 @@ config = [
     ("backend_expire_seconds", 300),
     ("http_listen_port", 80),
     ("main_site_host", "127.0.0.1"),
+    ("admin_site_host", "127.0.0.1"),
     ("session_expire_seconds", 3600),
+    ("mysql_host", "127.0.0.1"),
+    ("mysql_user", "root"),
+    ("mysql_pasword", "tang"),
+    ("mysql_db", "unreal"),
 ]
 
 

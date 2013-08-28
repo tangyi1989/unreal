@@ -26,3 +26,11 @@ class UnrealException(Exception):
 class LoopRequestException(UnrealException):
     code = 1001
     message = "Not allow loop request self."
+
+class PromptRedirect(UnrealException):
+    code = 1001
+    message = "Display msg on error msg and redirect to uri"
+
+    def __init__(self, msg, uri=None):
+        self.msg = msg
+        self.uri = uri

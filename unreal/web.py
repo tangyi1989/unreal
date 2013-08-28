@@ -2,6 +2,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 import redis
 
 import tornado
@@ -26,9 +27,46 @@ class Application(web.Application):
         application_settings = dict(
             template_path=os.path.join(os.path.dirname(__file__), "template"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
+            cookie_secret="secret",
             debug=CONF.debug)
 
         web.Application.__init__(self, **application_settings)
+
+    def _get_host_handlers(self, request):
+        # Modified: Just match one handler one time.
+        host = request.host.lower().split(':')[0]
+        matches = []
+        for pattern, handlers in self.handlers:
+            if pattern.match(host):
+                matches.extend(handlers)
+                break
+
+        # Look for default host if not behind load balancer (for debugging)
+        if not matches and "X-Real-Ip" not in request.headers:
+            for pattern, handlers in self.handlers:
+                if pattern.match(self.default_host):
+                    matches.extend(handlers)
+                    break
+
+        return matches or None
+
+    def _insert_default_handlers(self, handlers):
+        if self.settings.get("static_path"):
+            settings = self.settings
+            path = self.settings["static_path"]
+            handlers = list(handlers or [])
+            static_url_prefix = settings.get("static_url_prefix",
+                                             "/static/")
+            static_handler_class = settings.get("static_handler_class",
+                                                web.StaticFileHandler)
+            static_handler_args = settings.get("static_handler_args", {})
+            static_handler_args['path'] = path
+            for pattern in [re.escape(static_url_prefix) + r"(.*)",
+                            r"/(favicon\.ico)", r"/(robots\.txt)"]:
+                handlers.insert(0, (pattern, static_handler_class,
+                                    static_handler_args))
+
+            return handlers
 
 
 def greenify_handlers(handlers):
@@ -41,20 +79,30 @@ def greenify_handlers(handlers):
 
 
 def create_application():
+    application = Application()
+
     # Statement our handlers.
     proxy_handlers = [(r"/", handler.proxy.RootProxy),
                       (r".*", handler.proxy.ProxyHandler)]
     proxy_handlers = greenify_handlers(proxy_handlers)
+    proxy_handlers = application._insert_default_handlers(proxy_handlers)
 
     main_handlers = [(r"/", handler.main.Index),
-                     (r"/link/(w+)", handler.main.Link)]
+                     (r"/link/(\w+)", handler.main.Link)]
     main_handlers = greenify_handlers(main_handlers)
+    main_handlers = application._insert_default_handlers(main_handlers)
+
+    admin_handlers = [(r"/", handler.admin.AdList),
+                      (r"/login", handler.admin.Login),
+                      (r"/sf_ad/action", handler.admin.AdAction)]
+    admin_handlers = greenify_handlers(admin_handlers)
+    admin_handlers = application._insert_default_handlers(admin_handlers)
 
     # Create our application that handle multiple host.
-    application = Application()
+    application.add_handlers(CONF.admin_site_host, admin_handlers)
     application.add_handlers(CONF.main_site_host, main_handlers)
     # match all host except main site.
-    application.add_handlers("(?!%s)" % CONF.main_site_host, proxy_handlers)
+    application.add_handlers(".*", proxy_handlers)
 
     return application
 

@@ -8,7 +8,7 @@ from unreal.utils import shortuuid
 from unreal.handler import base
 
 
-def authed(func):
+def require_login(func):
     def wrapper(handler, *args, **kwargs):
         if handler.session.get("user") is None:
             raise exception.PromptRedirect("请登录后，执行操作。", "/login")
@@ -34,16 +34,16 @@ class AdminBaseHandler(base.BaseHandler):
 
 class AdList(AdminBaseHandler):
 
-    @authed
+    @require_login
     def get(self):
-        ad_list = self.db.query("SELECT * FROM sf_advertisments s_a "
+        ad_list = self.db.query("SELECT * FROM sf_ad s_a "
                                 "JOIN url url ON s_a.url_id=url.id AND status=0")
         self.render("admin/ad_list.html", ad_list=ad_list)
 
 
 class AdAction(AdminBaseHandler):
 
-    @authed
+    @require_login
     def post(self):
         method = self.get_argument("method")
         if method == "add":
@@ -68,7 +68,7 @@ class AdAction(AdminBaseHandler):
             "INSERT INTO url(url, uuid, pv, create_time) VALUES(%s, %s, %s, NOW())",
             url, uuid, 0)
 
-        self.db.execute("INSERT INTO sf_advertisments(name, url_id, open_date, comment, "
+        self.db.execute("INSERT INTO sf_ad(name, url_id, open_date, comment, "
                         "kf_qq, link, server_ip, weight, status, expire_time, create_time) "
                         "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, "
                         "ADDDATE(NOW(), INTERVAL %s DAY), NOW())",

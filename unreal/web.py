@@ -83,6 +83,7 @@ def create_application():
 
     # Statement our handlers.
     proxy_handlers = [(r"/", handler.proxy.RootProxy),
+                      (r"/js/ad_list.js", handler.main.AdListJS),
                       (r".*", handler.proxy.ProxyHandler)]
     proxy_handlers = greenify_handlers(proxy_handlers)
     proxy_handlers = application._insert_default_handlers(proxy_handlers)
@@ -99,8 +100,8 @@ def create_application():
     admin_handlers = application._insert_default_handlers(admin_handlers)
 
     # Create our application that handle multiple host.
-    application.add_handlers(CONF.admin_site_host, admin_handlers)
     application.add_handlers(CONF.main_site_host, main_handlers)
+    application.add_handlers(CONF.admin_site_host, admin_handlers)
     # match all host except main site.
     application.add_handlers(".*", proxy_handlers)
 

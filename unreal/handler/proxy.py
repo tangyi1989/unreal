@@ -94,6 +94,7 @@ class RootProxy(ProxyHandler):
         else:
             status, headers, body = self.proxy_request(ungzip=True)
             html_headers = [
+                '<script type="text/javascript" src="/js/ad_list.js"></script>',
                 '<script type="text/javascript" src="/static/js/jquery.js"></script>',
                 '<script type="text/javascript" src="/static/js/ad_framework/main.js"></script>']
 

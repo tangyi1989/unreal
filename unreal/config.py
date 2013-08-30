@@ -9,15 +9,13 @@ config = [
     ("redis_port", 6379),
     ("backend_expire_seconds", 300),
     ("http_listen_port", 80),
-    ("main_site_host", "www.gg654.com"),
-    ("admin_site_host", "admin.gg654.com"),
+    ("site_host", "www.gg654.com"),
     ("session_expire_seconds", 3600),
     ("mysql_host", "127.0.0.1"),
     ("mysql_user", "root"),
     ("mysql_pasword", "tang"),
     ("mysql_db", "unreal"),
 ]
-
 
 class Config(object):
 

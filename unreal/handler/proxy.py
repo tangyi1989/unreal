@@ -4,6 +4,7 @@
 import gzip
 import cStringIO
 
+from unreal import backend
 from unreal import config
 from unreal import exception
 from unreal.utils import cache
@@ -21,8 +22,21 @@ class ProxyHandler(base.BaseHandler):
         if self.request.headers.get("DangerTag") == "unreal":
             raise exception.LoopRequestException()
 
+    def deny_proxy_access(self):
+        if self.request.host not in backend.AccessList:
+            raise exception.DenyAccess()
+
+    def _handle_request_exception(self, e):
+        e_type = type(e)
+
+        if e_type is exception.DenyAccess:
+            self.redirect("http://%s/" % CONF.main_site_host)
+        else:
+            super(ProxyHandler, self)._handle_request_exception(e)
+
     def proxy_request(self, ungzip=False, without_cache=False):
         self.prevent_loop_request_self()
+        self.deny_proxy_access()
 
         cache_key = cache.CacheKey(
             "REQUEST", self.request.host, self.request.method, self.request.uri)
@@ -94,7 +108,7 @@ class RootProxy(ProxyHandler):
         else:
             status, headers, body = self.proxy_request(ungzip=True)
             html_headers = [
-                '<script type="text/javascript" src="/js/ad_list.js"></script>',
+                '<script type="text/javascript" src="/js/global_ad.js"></script>',
                 '<script type="text/javascript" src="/static/js/jquery.js"></script>',
                 '<script type="text/javascript" src="/static/js/ad_framework/main.js"></script>']
 

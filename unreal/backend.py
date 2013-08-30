@@ -4,7 +4,7 @@
 backend_list = [("9pk.118sh.com", "113.105.175.243")]
 
 BACKEND_DICT = dict()
-
+AccessList = map(lambda x:x[0], backend_list)
 
 def get_backend(host):
     return BACKEND_DICT.get(host)

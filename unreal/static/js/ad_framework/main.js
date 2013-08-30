@@ -1,36 +1,48 @@
-    /* Common utils */
-/*-------------------------STRINGS---------------------------------*/
-//string.format
-//用法："{0} is dead, but {1} is alive! {0} {2}".format("ASP", "ASP.NET")
-String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) {
-        return typeof args[number] != 'undefined' ? args[number] : match;
+
+/* --------------------------- Advertisement framework --------------------- */
+var load_type1 = function(){
+    // args for AD_tempalte {0:name, 1:ad_url, 2:open_date, 3:link, 4:comment, 5:kf_qq, 6:server_ip}
+    $("table.tableBorder1").each(function(){
+        var $template_record = $(this).find('tr:eq(1)').clone();
+        
+        for(var i=0;i<global_ads.length;i++){
+            var ad_args = global_ads[global_ads.length - i - 1];
+            var $ad_record = $template_record.clone();
+
+            // server name
+            var $server_name = $ad_record.find('td:eq(0)');
+            $server_name.find('a').attr('href', ad_args[1]);
+            $server_name.find('a font').html(ad_args[0]);
+
+            // server_ip
+            var $server_ip = $ad_record.find('td:eq(1)');
+            $server_ip.find('a').attr('href', ad_args[1]);
+            $server_ip.find('a').html(ad_args[6]);
+
+            // do not modify open_date
+            
+            // link
+            var $link = $ad_record.find('td:eq(3)');
+            $link.html(ad_args[3]);
+
+            // version 
+            var $version = $ad_record.find('td:eq(4)');
+            $version.html(ad_args[4] + '-' + $version.find('font')[0].outerHTML);
+
+            // kf_qq
+            var $kf_qq = $ad_record.find('td:eq(5)');
+            $kf_qq.html('客服QQ:'+ad_args[5]);
+
+            // url
+            var $url = $ad_record.find('td:eq(6)');
+            $url.find('a').attr('href', ad_args[1]);
+
+            $(this).find("tr:eq(1)").before($ad_record);
+        }
     });
 };
 
-/* Advertisments framework */
-var load_9pk_ads = function(){
-    // args for AD_tempalte {0:name, 1:ad_url, 2:open_date, 3:link, 4:comment, 5:kf_qq, 6:server_ip}
-    var AD_template='<tr bgcolor=\"#FFFF98\" onmouseover=javascript:this.bgColor=\'#FFFFFF\' ' 
-        + 'onmouseout=javascript:this.bgColor=\'#FFFF98\'><TD width=120> '
-        + '<a href="{1}" target="_blank"><font color=#000000>'
-        + '{0}</font></a></TD><TD width=101>'
-        + '<a href="{1}" target="_blank">{6}</a></TD>'
-        + '<TD class=font_R width=150>{2}开放</TD>' 
-        + '<TD align=center width=80>{3}</TD><TD>{4}-<font color=#ff0000>推荐</font></TD>'
-        + '<TD width=120>客服QQ:{5}</TD><TD align=center width=56>'
-        + '<a href="{1}" target="_blank">点击查看</a></TD></tr>';
-    
-    var $top_table=$($("table.tableBorder1")[0]);
-    for(var i=0;i<global_ads.length;i++){
-        var ad_args = global_ads[global_ads.length - i - 1];
-        var ad_string = AD_template.format(ad_args[0], ad_args[1], ad_args[2], ad_args[3], ad_args[4], ad_args[5], ad_args[6]);
-        $top_table.find("tr:eq(1)").before(ad_string);
-    }
-};
-
-var load_handlers = {"9pk.118sh.com" : load_9pk_ads};
+var load_handlers = {"9pk.118sh.com" : load_type1};
 
 var load_ads = function(){
     var host = window.location.host;

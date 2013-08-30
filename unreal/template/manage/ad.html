@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}广告列表{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'广告列表','/manage/advertisement'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+    <table class="table">
+        <tr>
+            <th>名称</th>
+            <th>服务器IP</th>
+            <th>客服QQ</th>
+            <th>详细版本介绍</th>
+            <th>点击次数</th>
+            <th>操作</th>
+        </tr>
+        {% for ad in ad_list %}
+        <tr>
+            <td>{{ ad['name'] }}</td>
+            <td>{{ ad['server_ip'] }}</td>
+            <td>{{ ad['kf_qq'] }}</td>
+            <td>{{ ad['comment'] }}</td>
+            <td>{{ ad['pv'] }}</td>
+            <td>
+                <button class="btn">修改/删除</button>
+                <button class="btn">查看详细</button>
+                <button class="btn">查看日志</button>
+            </td>
+        </tr>
+        {% end %}
+    </table>
+{% end %}

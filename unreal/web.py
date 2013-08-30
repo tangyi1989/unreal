@@ -4,7 +4,6 @@
 import os
 import re
 import redis
-
 import tornado
 from tornado import web
 from tornado import httpserver
@@ -83,26 +82,21 @@ def create_application():
 
     # Statement our handlers.
     proxy_handlers = [(r"/", handler.proxy.RootProxy),
-                      (r"/js/ad_list.js", handler.main.AdListJS),
+                      (r"/js/global_ad.js", handler.ad.AdListJS),
                       (r".*", handler.proxy.ProxyHandler)]
     proxy_handlers = greenify_handlers(proxy_handlers)
     proxy_handlers = application._insert_default_handlers(proxy_handlers)
 
-    main_handlers = [(r"/", handler.main.Index),
-                     (r"/link/(\w+)", handler.main.Link)]
-    main_handlers = greenify_handlers(main_handlers)
-    main_handlers = application._insert_default_handlers(main_handlers)
-
-    admin_handlers = [(r"/", handler.admin.AdList),
-                      (r"/login", handler.admin.Login),
-                      (r"/sf_ad/action", handler.admin.AdAction)]
-    admin_handlers = greenify_handlers(admin_handlers)
-    admin_handlers = application._insert_default_handlers(admin_handlers)
+    handlers = [(r"/", handler.index.Index),
+                (r"/login", handler.index.Login),
+                (r"/logout", handler.index.Logout),
+                (r"/manage|manage/advertisment", handler.manage.Advertisement),
+                (r"/link/(\w+)", handler.link.Link)]
+    handlers = greenify_handlers(handlers)
+    handlers = application._insert_default_handlers(handlers)
 
     # Create our application that handle multiple host.
-    application.add_handlers(CONF.main_site_host, main_handlers)
-    application.add_handlers(CONF.admin_site_host, admin_handlers)
-    # match all host except main site.
+    application.add_handlers(CONF.site_host, handlers)
     application.add_handlers(".*", proxy_handlers)
 
     return application

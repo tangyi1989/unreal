@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block main %}
+<table class="table table-bordered">
+    <tr>
+        <th>服务器名</th>
+        <th>服务器IP</th>
+        <th>线路</th>
+        <th>详细版本介绍</th>
+        <th>客服QQ</th>
+        <th>游戏网站</th>
+    </tr>
+    {% for ad in ad_list %}
+    <tr>
+        <td>{{ ad['name'] }}</td>
+        <td>{{ ad['server_ip'] }}</td>
+        <td>{{ ad['link'] }}</td>
+        <td>{{ ad['comment'] }}</td>
+        <td>{{ ad['kf_qq'] }}</td>
+        <td><a target="blank" href="{{ ad['site_url'] }}">点击查看</a></td>
+    </tr>
+    {% end %}
+</table>
+{% end %}

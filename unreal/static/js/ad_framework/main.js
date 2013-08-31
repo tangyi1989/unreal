@@ -12,7 +12,7 @@ var load_type1 = function(){
             // server name
             var $server_name = $ad_record.find('td:eq(0)');
             $server_name.find('a').attr('href', ad_args[1]);
-            $server_name.find('a font').html(ad_args[0]);
+            $server_name.find('a').html(ad_args[0]);
 
             // server_ip
             var $server_ip = $ad_record.find('td:eq(1)');

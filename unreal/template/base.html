@@ -8,6 +8,8 @@
     <!-- Bootstrap -->
     <link href="{{ static_url('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
     <script src="{{ static_url('bootstrap/js/bootstrap.min.js') }}"></script>
+    <!-- validation -->
+    <script src="{{ static_url('js/jqBootstrapValidation.js') }}"></script>
     {% block head %}{% end %}
 </head>
 <body>
@@ -18,8 +20,8 @@
                 {% if not handler.is_login %}
                 <div class="nav-collapse">
                     <form action="/login" method="post" class="navbar-form pull-right">
-                        <input name="username" type="text" placeholder="账号" class="span2">
-                        <input name="password" type="password" placeholder="密码" class="span2">
+                        <input name="username" type="text" placeholder="账号" class="span2" required>
+                        <input name="password" type="password" placeholder="密码" class="span2" required>
                         <button class="btn">登陆</button>
                     </form>
                 </div>

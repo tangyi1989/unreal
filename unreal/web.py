@@ -88,10 +88,21 @@ def create_application():
     proxy_handlers = application._insert_default_handlers(proxy_handlers)
 
     handlers = [(r"/", handler.index.Index),
+                (r"/link/(\w+)", handler.link.Link),
                 (r"/login", handler.index.Login),
                 (r"/logout", handler.index.Logout),
-                (r"/manage|manage/advertisment", handler.manage.Advertisement),
-                (r"/link/(\w+)", handler.link.Link)]
+                (r"/manage(?:/advertisement)*", handler.manage.ad.AdList),
+                (r"/manage/advertisement/add", handler.manage.ad.AdAdd),
+                (r"/manage/advertisement/action", handler.manage.ad.AdAction),
+                (r"/manage/advertisement/modify/(\d+)", handler.manage.ad.AdModify),
+                (r"/manage/advertisement/detail/(\d+)", handler.manage.ad.AdDetail),
+                (r"/manage/advertisement/pv_log/(\d+)", handler.manage.ad.AdPVLog),
+                (r"/manage/user/action", handler.manage.user.UserAction),
+                (r"/manage/user/add", handler.manage.user.UserAdd),
+                (r"/manage/user/list", handler.manage.user.UserList),
+                (r"/manage/user/change_password", handler.manage.user.ChangePassword),
+                ]
+
     handlers = greenify_handlers(handlers)
     handlers = application._insert_default_handlers(handlers)
 

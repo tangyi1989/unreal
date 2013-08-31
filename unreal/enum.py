@@ -14,4 +14,6 @@ class Enum(object):
 
         return value
 
-Role = Enum(Normal=1, Admin=2)
+Role = Enum(Normal=0, Admin=1)
+UserStatus = Enum(Active=0, Deleted=1)
+AdStatus = Enum(Active=0, Deleted=1)

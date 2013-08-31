@@ -1,0 +1,38 @@
+{% extends "../base.html" %}
+
+{% block title %}新增用户{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'新增用户','/manage/user/add'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+<form action="/manage/user/action?method=add" method="post">
+    <table id="ad_table" class="table table-bordered">
+        <thread>
+            <tr>
+                <th colspan="2">新增用户</th>
+            </tr>
+        </thread>
+        <tr>
+            <td>用户名</td>
+            <td><input name="username" type="text" required></td>
+        </tr>
+        <tr>
+            <td>新密码</td>
+            <td><input name="password" type="password" required></td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <input type="submit" class="btn" value="确定">
+                    <a class='btn' href="javascript:window.history.back()">返回</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+{% end %}

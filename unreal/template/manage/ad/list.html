@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "../base.html" %}
 
 {% block title %}广告列表{% end %}
 
 {% block breadcrumbs %}
     {% module Template('breadcrumb.html',args=[
-        (u'广告列表','/manage/advertisement'),
+        (u'广告列表','/manage/advertisment'),
         ])
     %}
 {% end %}
@@ -27,9 +27,9 @@
             <td>{{ ad['comment'] }}</td>
             <td>{{ ad['pv'] }}</td>
             <td>
-                <button class="btn">修改/删除</button>
-                <button class="btn">查看详细</button>
-                <button class="btn">查看日志</button>
+                <a href="/manage/advertisement/detail/{{ ad['ad_id'] }}" class="btn">操作/详细</a>
+                <a href="/manage/advertisement/pv_log/{{ ad['ad_id'] }}" class="btn">访问日志</a>
+                <a href="/manage/advertisement/action?method=delete&ad_id={{ ad['ad_id'] }}" onclick="return confirm('确定删除？');" class="btn">删除</a>
             </td>
         </tr>
         {% end %}

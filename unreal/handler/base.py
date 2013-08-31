@@ -62,7 +62,15 @@ class BaseHandler(web.RequestHandler):
         user = self.session.get('user')
         return user is not None and user.get('type') == enum.Role.Admin 
 
-    def prompt_and_redirect(self, message, uri):
+    def logout(self):
+        if self.is_login:
+            del self.session['user']
+            self.session.save()
+
+    def prompt_and_redirect(self, message, uri=None):
+        if uri is None:
+            uri = self.request.headers.get('Referer', "/")
+            
         return self.render("prompt.html", message=message, redirect_url=uri)
 
     def _handle_request_exception(self, e):

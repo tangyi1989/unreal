@@ -4,11 +4,12 @@
 <div class="container-fluid">
     <div class="span2">
         <ul class="nav nav-tabs nav-stacked">
-            <li><a href="/manage/advertisment">广告列表</a></li>
-            <li><a href="">添加广告</a></li>
+            <li><a href="/manage/advertisement/add">添加广告</a></li>
+            <li><a href="/manage/advertisement">广告列表</a></li>
+            <li><a href="/manage/user/change_password">修改密码</a></li>
             {% if handler.is_admin %}
-            <li><a href="">用户管理</a></li>
-            <li><a href="">添加用户</a></li>
+            <li><a href="/manage/user/list">用户列表</a></li>
+            <li><a href="/manage/user/add">添加用户</a></li>
             {% end %}
         </ul>
     </div>

@@ -1,0 +1,29 @@
+{% extends "../base.html" %}
+
+{% block title %}用户列表{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'用户列表','/manage/user/list'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+<table class="table">
+    <tr>
+        <th>用户名</th>
+        <th>创建时间</th>
+        <th>状态</th>
+        <th>操作</th>
+    </tr>
+    {% for user in user_list %}
+        <tr>
+            <td>{{ user['name'] }}</td>
+            <td>{{ user['create_time'] }}</td>
+            <td>{{ user['status'] }}</td>
+            <td></td>
+        </tr>
+    {% end %}
+</table>
+{% end %}

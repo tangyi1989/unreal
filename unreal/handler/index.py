@@ -38,8 +38,5 @@ class Login(base.BaseHandler):
 class Logout(base.BaseHandler):
 
     def get(self):
-        if self.is_login:
-            del self.session['user']
-            self.session.save()
-
+        self.logout()
         self.redirect("/")

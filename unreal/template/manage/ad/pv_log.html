@@ -1,0 +1,43 @@
+{% extends "../base.html" %}
+
+{% block title %}访问日志{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'广告列表','/manage/advertisement'),
+        (u'访问日志','#'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+<table class="table table-bordered">
+    <thread>
+        <tr>
+            <th colspwan="3">
+                网站地址: <a href="{{ ad_record['url'] }}">{{ ad_record['url'] }}</a>
+                访问量: <span>{{ ad_record['pv'] }}</span>
+            </th>
+        </tr>
+    </thread>
+    <tr>
+        <th>访问者IP</th>
+        <th>引用页面</th>
+        <th>访问时间</th>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log['ip_address'] }}</td>
+        <td>{{ log['referer'] }}</td>
+        <td>{{ log['create_time'] }}</td>
+    </tr>
+    {% end %}
+    <tfoot>
+        <tr>
+            <td colspan="2" style="text-align:center;">
+                <a class='btn' href="javascript:window.history.back()">返回</a>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+{% end %}

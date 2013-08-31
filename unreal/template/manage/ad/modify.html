@@ -1,0 +1,62 @@
+{% extends "../base.html" %}
+
+{% block title %}修改广告{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'广告列表','/manage/advertisement'),
+        (u'修改广告','#'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+<form action="/manage/advertisement/action?method=modify" method="post">
+    <input name="ad_id" type="hidden" value="{{ ad_record['ad_id'] }}">
+    <table id="ad_table" class="table table-bordered">
+        <thread>
+            <tr>
+                <th colspan="2">修改广告:《{{ ad_record['name'] }}》</th>
+            </tr>
+        </thread>
+        <tr>
+            <td>服务器名称</td>
+            <td><input name="name" type="text" value="{{ ad_record['name'] }}" required></td>
+        </tr>
+        <tr>
+            <td>服务器IP</td>
+            <td><input name="server_ip" type="text" value="{{ ad_record['server_ip'] }}" required></td>
+        </tr>
+        <tr>
+            <td>客服QQ</td>
+            <td><input name="kf_qq" type="text" value="{{ ad_record['kf_qq'] }}" required></td>
+        </tr>
+        <tr>
+            <td>线路</td>
+            <td><input name="link" type="text" value="{{ ad_record['link'] }}" required></td>
+        </tr>
+        <tr>
+            <td>版本信息</td>
+            <td><input name="comment" type="text" value="{{ ad_record['comment'] }}" required></td>
+        </tr>
+        <tr>
+            <td>网站地址</td>
+            <td>
+                <input name="url" type="text" value="{{ ad_record['url'] }}" required>
+            </td>
+        </tr>
+        <tr>
+            <td>发布时间</td>
+            <td>{{ ad_record['create_time'] }}</td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <input type="submit" class="btn" value="确定">
+                    <a class='btn' href="javascript:window.history.back()">返回</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+{% end %}

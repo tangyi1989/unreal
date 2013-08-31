@@ -1,0 +1,66 @@
+{% extends "../base.html" %}
+
+{% block title %}广告详细{% end %}
+
+{% block breadcrumbs %}
+    {% module Template('breadcrumb.html',args=[
+        (u'广告列表','/manage/advertisement'),
+        (u'广告详细','#'),
+        ])
+    %}
+{% end %}
+
+{% block right_content %}
+    <table id="ad_table" class="table table-bordered">
+        <thread>
+            <tr>
+                <th colspan="2">广告:《{{ ad_record['name'] }}》详细信息</th>
+            </tr>
+        </thread>
+        <tr>
+            <td>服务器名称</td>
+            <td>{{ ad_record['name'] }}</td>
+        </tr>
+        <tr>
+            <td>服务器IP</td>
+            <td>{{ ad_record['server_ip'] }}</td>
+        </tr>
+        <tr>
+            <td>客服QQ</td>
+            <td>{{ ad_record['kf_qq'] }}</td>
+        </tr>
+        <tr>
+            <td>线路</td>
+            <td>{{ ad_record['link'] }}</td>
+        </tr>
+        <tr>
+            <td>版本信息</td>
+            <td>{{ ad_record['comment'] }}</td>
+        </tr>
+        <tr>
+            <td>网站地址</td>
+            <td>
+                <a href="{{ ad_record['url'] }}">{{ ad_record['url'] }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td>点击次数</td>
+            <td>
+                {{ ad_record['pv'] }}
+                <a href="/manage/advertisement/pv_log/{{ ad_record['ad_id'] }}">详细</a>
+            </td>
+        </tr>
+        <tr>
+            <td>发布时间</td>
+            <td>{{ ad_record['create_time'] }}</td>
+        </tr>
+        <tfoot>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <a class='btn' href="/manage/advertisement/modify/{{ ad_record['ad_id'] }}">修改</a>
+                    <a class='btn' href="javascript:window.history.back()">返回</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+{% end %}
